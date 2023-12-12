@@ -17,7 +17,7 @@ const DUMMY_PLACES = [
     },
     {
         id: 'p2',
-        title: 'Asgard',
+        title: 'Asgard on Earth (AE)',
         description: 'Scandinavian gods\' home',
         imageUrl: 'https://eskipaper.com/images/asgard-1.jpg',
         address: 'Rua Farani, Botafogo, Rio de Janeiro - RJ, 22250-150, Brazil',
