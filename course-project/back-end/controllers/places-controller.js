@@ -87,7 +87,8 @@ const createPlace = async (req, res, next) => {
 
     try {
         await createdPlace.save();
-    } catch (error) {
+    } catch (err) {
+        const error = new HttpError('Creating place failed, please try again.', 500);
         return next(error);
     }
 
@@ -98,7 +99,8 @@ const updatePlace = async (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        throw new HttpError('Invalid inputs passed, please check your data.', 422);
+        const error = new HttpError('Invalid inputs passed, please check your data.', 422);
+        return next(error);
     }
 
     const placeId = req.params.pid;
