@@ -1,17 +1,7 @@
-const { v4: uuidv4 } = require('uuid');
 const { validationResult } = require('express-validator');
 
 const HttpError = require('../models/http-error');
 const User = require('../models/user');
-
-const DUMMY_USERS = [
-    {
-        id: 'u1',
-        name: 'Somebody Nobody',
-        email: 'test@test.test',
-        password: 'tester123'
-    }
-];
 
 const getUsers = async (req, res, next) => {
     let users;
@@ -34,7 +24,7 @@ const signup = async (req, res, next) => {
         return next(error);
     }
 
-    const { name, email, password, places } = req.body;
+    const { name, email, password } = req.body;
 
     let existingUser;
 
@@ -55,7 +45,7 @@ const signup = async (req, res, next) => {
         email,
         image: 'https://www.slashfilm.com/img/gallery/marvels-loki-season-2-ending-explained-is-this-truly-glorious-purpose/the-god-of-stories-1699636943.jpg',
         password,
-        places
+        places: []
     });
 
     try {
