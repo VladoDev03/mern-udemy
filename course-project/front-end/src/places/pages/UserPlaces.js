@@ -1,44 +1,42 @@
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import PlaceList from "../components/PlaceList";
-
-const DUMMY_PLACES = [
-    {
-        id: 'p1',
-        title: 'Asgard',
-        description: 'Scandinavian gods\' home',
-        imageUrl: 'https://eskipaper.com/images/asgard-1.jpg',
-        address: 'Rua Farani, Botafogo, Rio de Janeiro - RJ, 22250-150, Brazil',
-        location: {
-            lat: -22.9424648,
-            lng: -43.1828978
-        },
-        creator: 'u1'
-    },
-    {
-        id: 'p2',
-        title: 'Asgard on Earth (AE)',
-        description: 'Scandinavian gods\' home',
-        imageUrl: 'https://eskipaper.com/images/asgard-1.jpg',
-        address: 'Rua Farani, Botafogo, Rio de Janeiro - RJ, 22250-150, Brazil',
-        location: {
-            lat: -22.9424648,
-            lng: -43.1828978
-        },
-        creator: 'u2'
-    }
-];
+import { useHttpClient } from '../../shared/hooks/http-hook';
 
 const UserPlaces = () => {
+    const [loadedPlaces, setLoadedPlaces] = useState([]);
+
+    const { isLoading, error, sendRequest, clearError } = useHttpClient();
+
     const userId = useParams().userId;
-    const loadedPlaces = DUMMY_PLACES.filter(place => {
-        // console.log(place.creator);
-        console.log(userId);
-        return place.creator === userId;
-    });
+
+    useEffect(() => {
+        const fetchPlaces = async () => {
+            try {
+                const responseData = await sendRequest(`http://localhost:5000/api/places/user/${userId}`);
+
+                setLoadedPlaces(responseData.places);
+            } catch (err) {}
+        };
+
+        fetchPlaces();
+    }, [sendRequest, userId]);
+
+    const placeDeletedHandler = deletedPlaceId => {
+        setLoadedPlaces(prevPlaces => {
+            return prevPlaces.filter(place => place.id !== deletedPlaceId);
+        });
+    };
 
     return (
-        <PlaceList items={loadedPlaces} />
+        <>
+            <ErrorModal error={error} onClear={clearError} />
+            {isLoading && <div className='center'><LoadingSpinner /></div>}
+            {!isLoading && loadedPlaces && <PlaceList items={loadedPlaces} onDeletePlace={placeDeletedHandler} />}
+        </>
     );
 };
 
