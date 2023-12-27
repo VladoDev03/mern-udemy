@@ -43,7 +43,7 @@ const signup = async (req, res, next) => {
     const createdUser = new User({
         name,
         email,
-        image: 'https://www.slashfilm.com/img/gallery/marvels-loki-season-2-ending-explained-is-this-truly-glorious-purpose/the-god-of-stories-1699636943.jpg',
+        image: req.file.path,
         password,
         places: []
     });
