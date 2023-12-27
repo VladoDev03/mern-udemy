@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const { mongoose } = require('mongoose');
 const { validationResult } = require('express-validator');
 
@@ -70,7 +72,7 @@ const createPlace = async (req, res, next) => {
         description,
         address,
         location: coordinates,
-        image: 'https://www.tripsavvy.com/thmb/sBI2W7YNV4vRSVdbRVfASLH3F6I=/2617x3874/filters:fill(auto,1)/5891665274_cc93622eb7_o-56a3ff3b5f9b58b7d0d4df13.jpg',
+        image: req.file.path,
         creator
     });
 
@@ -157,6 +159,8 @@ const deletePlace = async (req, res, next) => {
         const error = new HttpError('Could not find place for this id.', 404);
         return next(error);
     }
+
+    const imagePath = place.image;
     
     try {
         const session = await mongoose.startSession();
@@ -172,6 +176,10 @@ const deletePlace = async (req, res, next) => {
         const error = new HttpError('Something went wrong, could not delete place.', 500);
         return next(error);
     }
+
+    fs.unlink(imagePath, err => {
+        console.log(err);
+    });
 
     res.status(200).json({ message: 'Deleted place.' });
 }

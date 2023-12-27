@@ -17,7 +17,6 @@ const fileUpload = multer({
             const ext = MIME_TYPE_MAP[file.mimetype];
 
             cb(null, `${uuidv4()}.${ext}`);
-            console.log()
         }
     }),
     fileFilter: (req, file, cb) => {
