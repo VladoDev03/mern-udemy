@@ -1,29 +1,52 @@
+import { useEffect, useState } from "react";
+
 import UsersList from "../components/UsersList";
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 
 const Users = () => {
-    const USERS = [
-        {
-            id: 'u1',
-            name: 'Loki',
-            image: 'https://www.slashfilm.com/img/gallery/marvels-loki-season-2-ending-explained-is-this-truly-glorious-purpose/the-god-of-stories-1699636943.jpg',
-            places: 3
-        },
-        {
-            id: 'u2',
-            name: 'Loki',
-            image: 'https://www.slashfilm.com/img/gallery/marvels-loki-season-2-ending-explained-is-this-truly-glorious-purpose/the-god-of-stories-1699636943.jpg',
-            places: 3
-        },
-        {
-            id: 'u3',
-            name: 'Loki',
-            image: 'https://www.slashfilm.com/img/gallery/marvels-loki-season-2-ending-explained-is-this-truly-glorious-purpose/the-god-of-stories-1699636943.jpg',
-            places: 3
-        }
-    ];
+    const [loadedUsers, setLoadedUsers] = useState();
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState();
+
+    useEffect(() => {
+        const sendRequest = async () => {
+            setIsLoading(true);
+
+            try {
+                const response = await fetch('http://localhost:5000/api/users');
+                const responseData = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(responseData.message);
+                }
+
+                setLoadedUsers(responseData.users);
+            } catch (err) {
+                setIsLoading(false);
+            }
+
+            setIsLoading(false);
+        };
+
+        sendRequest();
+    }, []);
+
+    const errorHandler = () => {
+        setError(null);
+    };
 
     return (
-        <UsersList items={USERS} />
+        <>
+            <ErrorModal error={error} onClear={errorHandler} />
+            {isLoading && (
+                <div className="center">
+                    <LoadingSpinner />
+                </div>
+            )}
+            {!isLoading && loadedUsers && <UsersList items={loadedUsers} />}
+        </>
     );
 };
 
