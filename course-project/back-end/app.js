@@ -48,10 +48,11 @@ app.use((error, req, res, next) => {
 
 
 mongoose
-    .connect('mongodb+srv://vladsto101:Salamur12@course.rgce3bw.mongodb.net/places?retryWrites=true&w=majority')
+    .connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@course.rgce3bw.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`)
     .then(() => {
         app.listen(5000);
     })
     .catch(err => {
+        console.log(process.env.DB_NAME);
         console.log(err);
     });

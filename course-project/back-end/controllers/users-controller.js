@@ -74,7 +74,7 @@ const signup = async (req, res, next) => {
                 userId: createdUser.id,
                 email: createdUser.email
             },
-            'thisisasicretthatmustnotbeshared',
+            process.env.JWT,
             { expiresIn: '1h' }
         );
     } catch (err) {
@@ -122,7 +122,7 @@ const login = async (req, res, next) => {
                 userId: existingUser.id,
                 email: existingUser.email
             },
-            'thisisasicretthatmustnotbeshared',
+            process.env.JWT,
             { expiresIn: '1h' }
         );
     } catch (err) {
