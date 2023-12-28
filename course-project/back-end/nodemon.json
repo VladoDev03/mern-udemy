@@ -3,6 +3,7 @@
         "DB_USER": "vladsto101",
         "DB_PASSWORD": "Salamur12",
         "DB_NAME": "places",
-        "JWT_KEY": "thisisasicretthatmustnotbeshared"
+        "JWT_KEY": "thisisasicretthatmustnotbeshared",
+        "PORT": 5000
     }
 }
